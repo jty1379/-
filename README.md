@@ -23,15 +23,36 @@
 - Windows操作系统
 - EGE图形库
 - 支持C++17的编译器（如MinGW-w64）
+- CMake 3.10或更高版本
 
 ### 编译步骤
 
+#### 方法1：使用CMake（推荐）
 1. 确保已安装EGE图形库并正确配置
-2. 使用以下命令直接编译：
+2. 创建构建目录并进入：
+   ```
+   mkdir build
+   cd build
+   ```
+3. 配置项目：
+   ```
+   cmake .. -G "MinGW Makefiles"
+   ```
+4. 编译项目：
+   ```
+   mingw32-make
+   ```
+5. 运行生成的可执行文件：
+   ```
+   ./dino_game.exe
+   ```
+
+#### 方法2：直接编译
+1. 使用以下命令直接编译：
    ```
    g++ -Wall -Wextra -std=c++17 -I"E:/CLion 2025.2.2/bin/mingw/include" src/OptimizedMain.cpp src/OptimizedDinoGame.cpp -o dino_game.exe -L"E:/CLion 2025.2.2/bin/mingw/lib" -lgraphics -lgdi32 -luser32 -lkernel32 -lgdiplus
    ```
-3. 运行生成的可执行文件：
+2. 运行生成的可执行文件：
    ```
    ./dino_game.exe
    ```
