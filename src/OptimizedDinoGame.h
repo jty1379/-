@@ -19,7 +19,7 @@ private:
     bool isDucking;
     int groundLevel;
     static const int DINO_WIDTH = 40;
-    static const int DINO_HEIGHT = 50;
+    static const int DINO_HEIGHT = 60;
     static const int DINO_HEIGHT_DUCK = 30;
 
 public:
@@ -70,6 +70,7 @@ public:
 class Cactus : public Obstacle {
 public:
     Cactus(float x, float y);
+    Cactus(float x, float y, float height);
     virtual ~Cactus();
 
     virtual void render() override;
@@ -143,6 +144,7 @@ private:
     bool isGameOver;
     int gameSpeed;
     int frameCount;
+    int gameOverDelay;
 
 public:
     DinoGame();

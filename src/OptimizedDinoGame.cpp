@@ -6,7 +6,7 @@
 #include <string>
 
 // Dinosaur 实现
-Dinosaur::Dinosaur() : x(50), y(340 - DINO_HEIGHT), velocityY(0), isJumping(false), isDucking(false), groundLevel(340) {}
+Dinosaur::Dinosaur() : x(50), y(340 - 60), velocityY(0), isJumping(false), isDucking(false), groundLevel(340) {}
 
 Dinosaur::~Dinosaur() {}
 
@@ -88,6 +88,8 @@ bool Obstacle::checkCollision(const Dinosaur& dino) {
 
 // Cactus 实现
 Cactus::Cactus(float x, float y) : Obstacle(x, y, 20, 40) {}
+
+Cactus::Cactus(float x, float y, float height) : Obstacle(x, y - height, 20, height) {}
 
 Cactus::~Cactus() {}
 
@@ -246,7 +248,7 @@ void ScoreManager::incrementScore(int points) {
 }
 
 // DinoGame 实现
-DinoGame::DinoGame() : isRunning(false), isGameOver(false), gameSpeed(5), frameCount(0) {}
+DinoGame::DinoGame() : isRunning(false), isGameOver(false), gameSpeed(5), frameCount(0), gameOverDelay(0) {}
 
 DinoGame::~DinoGame() {
     cleanup();
@@ -258,6 +260,7 @@ void DinoGame::initialize() {
         score.reset();
     } else {
         initgraph(800, 400);
+        setcaption("Scu Dino Game");
         setbkcolor(WHITE);
         cleardevice();
         ege::setrendermode(RENDER_MANUAL);
@@ -265,17 +268,24 @@ void DinoGame::initialize() {
         srand((unsigned int)time(nullptr));
     }
     
-    player.setPosition(50, 340 - 50);
+    player.setPosition(50, 340 - 60);
     isRunning = true;
     isGameOver = false;
     frameCount = 0;
+    gameOverDelay = 0;
     gameSpeed = 5;
 }
 
 void DinoGame::update() {
     if (!isRunning) return;
     
-    if (isGameOver) return;
+    if (isGameOver) {
+        gameOverDelay++;
+        if (gameOverDelay > 90) {  // 等待约2.7秒 (90帧 * 30ms)
+            gameOverDelay = 91;  // 标记倒计时结束
+        }
+        return;
+    }
     
     player.update();
     background.update();
@@ -317,8 +327,10 @@ void DinoGame::handleInput() {
         char key = getch();
         
         if (isGameOver) {
-            initialize();
-            isGameOver = false;
+            if (gameOverDelay >= 91) {
+                initialize();
+                isGameOver = false;
+            }
             return;
         }
         
@@ -351,16 +363,27 @@ void DinoGame::handleInput() {
 }
 
 void DinoGame::showGameOverScreen() {
+    // 设置字体和颜色
     setfont(30, 0, "Arial");
     setcolor(RED);
     
+    // 居中显示Game Over
     outtextxy(300, 150, "Game Over");
     
+    // 显示分数
     std::string scoreText = "Score: " + std::to_string(score.getCurrentScore());
     outtextxy(300, 200, scoreText.c_str());
     
     setfont(20, 0, "Arial");
-    outtextxy(250, 250, "Press any key to restart");
+    
+    // 显示倒计时提示
+    if (gameOverDelay > 0 && gameOverDelay <= 90) {
+        int remainingTime = (90 - gameOverDelay) / 30 + 1;  // 计算剩余秒数
+        std::string restartText = "Press any key to restart in " + std::to_string(remainingTime) + "s";
+        outtextxy(250, 250, restartText.c_str());
+    } else if (gameOverDelay >= 91) {
+        outtextxy(250, 250, "Press any key to restart");
+    }
 }
 
 void DinoGame::cleanup() {
@@ -369,13 +392,15 @@ void DinoGame::cleanup() {
 
 void DinoGame::generateObstacle() {
     if (frameCount % std::max(20, 80 - gameSpeed * 2) == 0) {
-        int type = rand() % 4;
-        if (type == 0) {
-            obstacles.push_back(std::make_unique<Cactus>(800, 340 - 40));
-        } else if (type <= 2) {
-            obstacles.push_back(std::make_unique<Bird>(800, 320));
+        int type = rand() % 6;
+        if (type < 3) {
+            // 生成随机高度的仙人掌(20-80像素)
+            int cactusHeight = 20 + (rand() % 7) * 10;  // 20, 30, 40, ..., 80
+            obstacles.push_back(std::make_unique<Cactus>(800, 340, cactusHeight));
         } else {
-            obstacles.push_back(std::make_unique<Bird>(800, 280));
+            // 生成随机高度的鸟(260-320像素)
+            int birdHeight = 260 + (rand() % 7) * 10;  // 260, 270, 280, ..., 320
+            obstacles.push_back(std::make_unique<Bird>(800, birdHeight));
         }
     }
     
