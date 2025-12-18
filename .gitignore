@@ -1,0 +1,20 @@
+# Build directories
+/build/
+/.cmake/
+
+# Executable files
+*.exe
+
+# Object files
+*.o
+
+# CMake files
+CMakeLists.txt
+CMakeCache.txt
+*.cmake
+
+# IDE specific files
+.vs/
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
