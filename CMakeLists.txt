@@ -25,6 +25,7 @@ target_link_libraries(dino_game
     user32
     kernel32
     gdiplus
+    -static
 )
 
 # 设置输出目录

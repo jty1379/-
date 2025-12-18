@@ -4,7 +4,7 @@
 CXX = g++
 CXXFLAGS = -Wall -Wextra -std=c++17
 INCLUDES = -I"E:/CLion 2025.2.2/bin/mingw/include"
-LIBS = -L"E:/CLion 2025.2.2/bin/mingw/lib" -lgraphics -lgdi32 -luser32 -lkernel32 -lgdiplus
+LIBS = -L"E:/CLion 2025.2.2/bin/mingw/lib" -lgraphics -lgdi32 -luser32 -lkernel32 -lgdiplus -static
 
 # Target executable
 TARGET = dino_game.exe
