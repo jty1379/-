@@ -1,15 +1,15 @@
 # Build directories
-/build/
+# /build/  # We want to keep CMake-generated build files
 /.cmake/
 
 # Executable files
-*.exe
+# *.exe  # We want to keep one executable file
 
 # Object files
 *.o
 
 # CMake files
-CMakeLists.txt
+# CMakeLists.txt  # We want to keep this file
 CMakeCache.txt
 *.cmake
 
