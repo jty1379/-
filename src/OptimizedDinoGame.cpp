@@ -363,26 +363,41 @@ void DinoGame::handleInput() {
 }
 
 void DinoGame::showGameOverScreen() {
-    // 设置字体和颜色
-    setfont(30, 0, "Arial");
+    // 设置字体和颜色（使用粗体字体）
+    setfont(30, 0, "Arial Bold");
     setcolor(RED);
     
+    // 设置透明背景
+    setbkmode(TRANSPARENT);
+    
     // 居中显示Game Over
-    outtextxy(300, 150, "Game Over");
+    const char* gameOverText = "Game Over";
+    int gameOverTextWidth = textwidth(gameOverText);
+    int gameOverXPos = (800 - gameOverTextWidth) / 2;  // 800是窗口宽度
+    outtextxy(gameOverXPos, 150, gameOverText);
     
-    // 显示分数
+    // 显示分数并居中
     std::string scoreText = "Score: " + std::to_string(score.getCurrentScore());
-    outtextxy(300, 200, scoreText.c_str());
+    int scoreTextWidth = textwidth(scoreText.c_str());
+    int scoreXPos = (800 - scoreTextWidth) / 2;  // 800是窗口宽度
+    outtextxy(scoreXPos, 200, scoreText.c_str());
     
-    setfont(20, 0, "Arial");
+    setfont(20, 0, "Arial Bold");
     
     // 显示倒计时提示
     if (gameOverDelay > 0 && gameOverDelay <= 90) {
         int remainingTime = (90 - gameOverDelay) / 30 + 1;  // 计算剩余秒数
         std::string restartText = "Press any key to restart in " + std::to_string(remainingTime) + "s";
-        outtextxy(250, 250, restartText.c_str());
+        // 动态计算文本宽度以实现居中
+        int textWidth = textwidth(restartText.c_str());
+        int xPos = (800 - textWidth) / 2;  // 800是窗口宽度
+        outtextxy(xPos, 250, restartText.c_str());
     } else if (gameOverDelay >= 91) {
-        outtextxy(250, 250, "Press any key to restart");
+        const char* restartText = "Press any key to restart";
+        // 动态计算文本宽度以实现居中
+        int textWidth = textwidth(restartText);
+        int xPos = (800 - textWidth) / 2;  // 800是窗口宽度
+        outtextxy(xPos, 250, restartText);
     }
 }
 
