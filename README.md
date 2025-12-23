@@ -96,9 +96,17 @@ cmake --build .
 ## 常见问题
 
 ### 编译错误
-- **找不到graphics.h**: 确保EGE库已正确安装到编译器的include目录中
-- **链接错误**: 确保库文件已正确安装到编译器的lib目录中，且库文件名与系统架构匹配（32位/64位）
+- **找不到graphics.h**: 确保EGE库已正确安装到编译器的include目录中。检查`graphics.h`和`ege.h`是否在编译器的include目录下
+- **链接错误（cannot find -lgraphics64）**: 确保库文件已正确安装到编译器的lib目录中。EGE库文件通常名为`libgraphics.a`或`libgraphics64.a`，确保文件存在
 - **函数未定义**: 检查是否正确链接了EGE库
+
+### 故障排除
+如果在其他电脑上编译失败，请检查：
+1. **确认EGE库已安装**：检查编译器目录下是否存在EGE文件
+   - include目录中应有：`graphics.h`, `ege.h`等头文件
+   - lib目录中应有：`libgraphics.a`或`libgraphics64.a`库文件
+2. **检查编译器配置**：确保使用的是安装了EGE库的编译器
+3. **验证路径设置**：在CLion中，确认Settings → Build, Execution, Deployment → Toolchains中的编译器路径正确
 
 ### 运行时错误
 - **程序闪退**: 确保系统已安装必要的运行时库，如MinGW-w64运行时库

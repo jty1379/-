@@ -3,19 +3,29 @@ project(DinoGame)
 
 set(CMAKE_CXX_STANDARD 17)
 
-# EGE库文件已放置在编译器的标准include和lib目录中，CMake和编译器会自动找到它们
+# 尝试查找EGE头文件
+find_path(EGE_INCLUDE_DIR graphics.h)
 
-# 设置EGE库名称
-if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-    set(EGE_LIB_NAME graphics64)
+if(EGE_INCLUDE_DIR)
+    message(STATUS "Found EGE headers in: ${EGE_INCLUDE_DIR}")
 else()
-    set(EGE_LIB_NAME graphics)
+    message(WARNING "EGE graphics.h not found in standard paths. Make sure EGE is installed in compiler's include directory.")
 endif()
 
-# 由于库文件已在编译器标准路径中，直接使用库名称
-set(EGE_LIBRARY ${EGE_LIB_NAME})
+# 尝试查找EGE库文件
+find_library(EGE_LIBRARY
+    NAMES graphics libgraphics libgraphics64
+    PATHS ENV LIB
+    PATHS_DEFAULT
+)
 
-message(STATUS "Using EGE library from compiler standard paths")
+if(EGE_LIBRARY)
+    message(STATUS "Found EGE library: ${EGE_LIBRARY}")
+else()
+    # 如果找不到具体的库文件，使用库名让链接器自行查找
+    set(EGE_LIBRARY graphics)
+    message(STATUS "EGE library will be resolved by linker")
+endif()
 
 # 源文件
 set(SOURCES
